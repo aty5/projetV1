@@ -1,0 +1,68 @@
+
+header{
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+    min-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logo{
+    width: 250px;
+    height: 50px;
+    background-color: darkblue;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    vertical-align: center;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav li {
+    margin: 10px;
+}
+
+main > h1 {
+    text-align: center;
+}
+
+label{
+    display: block;
+    min-width: 200px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+input, textarea, select {
+    width: 20%;
+    min-width: 300px;
+}
+
+.flex {
+    display: flex;
+    margin: 10px;
+}
+
+.form_creer_sortie {
+    display: flex;
+    width: 80%;
+    min-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    margin: 20px;
+    padding: 20px;
+}
+
+.div_button {
+    display: flex;
+    justify-content: center;
+}

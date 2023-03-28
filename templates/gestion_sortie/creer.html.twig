@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer Sortie{% endblock %}
+
+{% block body %}
+    <h1>Créer une sortie</h1>
+    <div class="form_creer_sortie">
+        <div>
+            <div class="flex">
+                {{ form_label(sortieForm.nom, 'Nom de la sortie :') }}
+                {{ form_widget(sortieForm.nom) }}
+            </div>
+            <div class="flex">
+                {{ form_label(sortieForm.dateHeureDebut, 'Date et heure de la sortie :') }}
+                {{ form_widget(sortieForm.dateHeureDebut) }}
+            </div>
+            <div class="flex">
+                {{ form_label(sortieForm.dateLimiteInscription, 'Date limite d\'inscription :') }}
+                {{ form_widget(sortieForm.dateLimiteInscription) }}
+            </div>
+            <div class="flex">
+                {{ form_label(sortieForm.nbInscriptionsMax, 'Nombre de place :') }}
+                {{ form_widget(sortieForm.nbInscriptionsMax) }}
+            </div>
+            <div class="flex">
+                {{ form_label(sortieForm.duree, 'Durée :') }}
+                {{ form_widget(sortieForm.duree) }}
+            </div>
+            <div class="flex">
+                {{ form_label(sortieForm.infosSortie, 'Description et infos :') }}
+                {{ form_widget(sortieForm.infosSortie) }}
+            </div>
+        </div>
+
+        <div>
+            <div class="flex">
+                {{ form_label(sortieForm.siteOrganisateur, 'Campus :') }}
+                {{ form_widget(sortieForm.siteOrganisateur) }}
+            </div>
+            <div class="flex">
+                {{ form_label(lieuForm.ville, 'Ville :') }}
+                {{ form_widget(lieuForm.ville) }}
+            </div>
+            <div class="flex">
+                {{ form_label(lieuForm.nom, 'Lieu :') }}
+                {{ form_widget(lieuForm.nom) }}
+            </div>
+            <div class="flex">
+                {{ form_label(lieuForm.rue, 'Rue :') }}
+                {{ form_widget(lieuForm.rue) }}
+            </div>
+            <div>
+                <div style="text-align: center">
+                    TODO: formulaire code postal
+                </div>
+            </div>
+            <div class="flex">
+                {{ form_label(lieuForm.latitude, 'Latitude :') }}
+                {{ form_widget(lieuForm.latitude) }}
+            </div>
+            <div class="flex">
+                {{ form_label(lieuForm.longitude, 'Longitude :') }}
+                {{ form_widget(lieuForm.longitude) }}
+            </div>
+        </div>
+
+    </div>
+    <div class="div_button">
+        <button>Enregistrer</button>
+        <button>Publier la sortie</button>
+        <button>Annuler</button>
+    </div>
+{% endblock %}
