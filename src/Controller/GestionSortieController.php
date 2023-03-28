@@ -31,4 +31,12 @@ class GestionSortieController extends AbstractController
             'lieuForm' => $lieuForm->createView(),
         ]);
     }
+
+    /**
+     * @Route("/accueil", name="accueil")
+     */
+    public function lister(): Response
+    {
+        return  $this->render('gestion_sortie/accueil.html.twig');
+    }
 }

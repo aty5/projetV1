@@ -6,11 +6,14 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
+ * @UniqueEntity(fields={"email"})
+ * @UniqueEntity(fields={"pseudo"})
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -26,16 +29,12 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private $motPasse; //motPasse
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -53,7 +52,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $pseudo;
 
@@ -65,7 +64,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Sortie::class, inversedBy="participants")
      */
-    private $sortie;
+    private $sorties; //pluriel
 
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur")
@@ -78,9 +77,16 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $campus;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $administrateur;
+
+    //rajouter un attribut administrateur
+
     public function __construct()
     {
-        $this->sortie = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
         $this->organisateurDeSorties = new ArrayCollection();
     }
 
@@ -114,7 +120,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
-    public function getUsername(): string
+    public function getUsername(): string //dépréciée
     {
         return (string) $this->email;
     }
@@ -122,7 +128,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
+    public function getRoles(): array //se servir de l'attribut administrateur
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
@@ -131,27 +137,26 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): string //motPasse
     {
-        return $this->password;
+        return $this->motPasse;
     }
 
-    public function setPassword(string $password): self
+    public function getMotPasse(): string //motPasse
     {
-        $this->password = $password;
+        return $this->motPasse;
+    }
 
+    public function setMotPasse(String $motPasse): self //motPasse
+    {
+        $this->motPasse = $motPasse;
         return $this;
     }
+
+
 
     /**
      * Returning a salt is only needed, if you are not using a modern
@@ -238,13 +243,13 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSortie(): Collection
     {
-        return $this->sortie;
+        return $this->sorties;
     }
 
     public function addSortie(Sortie $sortie): self
     {
-        if (!$this->sortie->contains($sortie)) {
-            $this->sortie[] = $sortie;
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties[] = $sortie;
         }
 
         return $this;
@@ -252,7 +257,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeSortie(Sortie $sortie): self
     {
-        $this->sortie->removeElement($sortie);
+        $this->sorties->removeElement($sortie);
 
         return $this;
     }
@@ -295,6 +300,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function isAdministrateur(): ?bool
+    {
+        return $this->administrateur;
+    }
+
+    public function setAdministrateur(bool $administrateur): self
+    {
+        $this->administrateur = $administrateur;
 
         return $this;
     }
