@@ -50,7 +50,7 @@ class Sortie
     private $infosSortie;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="sortie")
+     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="sorties")
      */
     private $participants;
 
@@ -67,7 +67,7 @@ class Sortie
     private $siteOrganisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="etatSortie")
+     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sorties")
      * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
