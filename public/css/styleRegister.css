@@ -1,0 +1,21 @@
+
+body{
+    background: rgb(115, 94, 79);
+}
+
+.formRegister{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.formRegister label{
+    display: block;
+    text-align: center;
+}
+.formRegister input {
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    padding: 0.2rem 0.5rem;
+    width: 30%;
+}

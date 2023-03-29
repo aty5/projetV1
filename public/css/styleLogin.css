@@ -1,0 +1,30 @@
+
+body{
+    background: rgb(115, 94, 79);
+}
+
+.cnx{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cnx label{
+    display: block;
+    text-align: center;
+}
+.cnx input {
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    padding: 0.2rem 0.5rem;
+    width: 30%;
+}
+
+
+.remember{
+    display: flex;
+    align-items: baseline;
+}
+
+.labelRemember{
+    background: #5eb5e0}
