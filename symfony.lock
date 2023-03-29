@@ -73,7 +73,7 @@
             "ref": "efb318193e48384eb5c5aadff15396ed698f8ffc"
         },
         "files": [
-            "./public/.htaccess"
+            "public/.htaccess"
         ]
     },
     "symfony/console": {
