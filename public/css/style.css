@@ -33,7 +33,7 @@ main > h1 {
 }
 
 
-label{
+/*label{
     display: block;
     min-width: 200px;
     text-align: right;
@@ -43,7 +43,7 @@ label{
 input, textarea, select {
     width: 20%;
     min-width: 300px;
-}
+}*/
 
 .flex {
     display: flex;

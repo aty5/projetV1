@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Data\SearchData;
 use App\Entity\Campus;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,32 +13,30 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class FiltrerSortieType extends AbstractType
 {
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $repository = $this->entityManager->getRepository(Campus::class);
-        $campus = $repository->findAll();
-        $campusArray = array();
-        foreach ($campus as $camp) {
-            $campusArray[$camp->getNom()] = $camp->getId();
-        }
 
         $builder
-            ->add('siteOrganisateur', ChoiceType::class, [
+            ->add('siteOrganisateur', EntityType::class, [
                 'label' => 'Campus',
-                'choices' => $campusArray,
+                'class' => Campus::class,
+                'choice_label' => 'nom',
                 'required' => false,
-                'multiple' => false,
-                'expanded' => false,
+
+
             ])
             ->add('nom', TextType::class, [
                 'label' => "Le nom de la sortie contient",
@@ -86,17 +85,12 @@ class FiltrerSortieType extends AbstractType
 
         $resolver->setDefaults([
             'data_class' => SearchData::class,
-            'method' => 'GET',
-            'csrf_protection' => false,
-            /*'siteOrganisateur' => [
-                'Site 1' => 'Site 1',
-                'Site 2' => 'Site 2',
-                'Site 3' => 'Site 3',
-            ]*/
+            'method' => 'GET', //en get car les parametres vont apparaitre dans l'urlpour partager le lien facilement, en post pas de parametre dans l'url
+            'csrf_protection' => false, // revoir cours, évite d'avoir à gérer le token qui ne sert à rien dans ce cas, lors du partage de lien
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix() //pour avoir une url + propre,
     {
         return '';
     }

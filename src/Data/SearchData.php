@@ -2,68 +2,44 @@
 
 namespace App\Data;
 
+use App\Entity\Campus;
 use DateTime;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class SearchData
 {
+//utiliser typage car 7.4 et non annotation
 
-    /**
-     * @var string
-     */
-    public $siteOrganisateur='';
-
-
-    /**
-     * @var string
-     */
-    public $nom = '';
+    public ?Campus $siteOrganisateur=null;
 
 
 
-    /**
-     * @var boolean
-     */
-    public $organisateur = false;
+    public ?string $nom = null;
 
-    /**
-     * @var boolean
-     */
-    public  $inscrit = false;
 
-    /**
-     * @var boolean
-     */
-    public  $nInscrit = false;
 
-    /**
-     * @var boolean
-     */
-    public $passees = false;
 
-    /**
-     * @var DateTime|null
-     */
-    public $dateDebut = null;
+    public bool $organisateur = false;
 
-    /**
-     * @var DateTime|null
-     */
-    public $dateFin = null;
+
+    public  bool $inscrit = false;
+
+
+    public  bool $nInscrit = false;
+
+
+    public bool $passees = false;
+
+
+    public ?DateTime $dateDebut = null;
+
+
+    public ?DateTime $dateFin = null;
 
     public function __construct()
     {
-        $this->dateDebut = new DateTime(); // initialisation à la date courante
+
     }
 
 
-    /*public $dateDebut = '';
-
-    public $dateFin ='';
-
-    public function __construct()
-    {
-        $this->dateDebut = date('d-m-Y'); // initialisation à la date courante
-    }*/
 
 }

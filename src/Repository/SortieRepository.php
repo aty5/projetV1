@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Security;
  */
 class SortieRepository extends ServiceEntityRepository
 {
-    private $security;
+    private Security $security;
     public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Sortie::class);
@@ -46,17 +46,27 @@ class SortieRepository extends ServiceEntityRepository
     public function listerSortiesFiltres(SearchData $searchData): array
     {
         $user = $this->security->getUser();
-        $query = $this->createQueryBuilder('s')
+        $query = $this->createQueryBuilder('s') //filtrer les sorties dont l'etat est historisées prendre les sorties différente de historisée
             ->addSelect('e')
             ->leftjoin('s.etat', 'e')
             ->addSelect('o')
             ->leftjoin('s.organisateur', 'o')
             ->addSelect('p')
             ->leftJoin('s.participants', 'p');
-            /*->addSelect('l')
-            ->leftjoin('s.lieu', 'l')
-            ->addSelect('sO')
-            ->leftjoin('s.siteOrganisateur', 'sO')*/
+
+        if ($user) {
+            $query->andWhere(
+                $query->expr()->orX(
+                    'e.libelle != :etat_creee',
+                    's.organisateur = :user'
+                )
+            )->setParameter('user', $user)
+                ->setParameter('etat_creee', 'créée');
+        } else {
+            $query->andWhere('e.libelle != :etat_creee')
+                ->setParameter('etat_creee', 'créée');
+        }
+
 
         if(!empty($searchData->nom)){
             $query = $query
@@ -79,11 +89,10 @@ class SortieRepository extends ServiceEntityRepository
             $query->andWhere('s.dateLimiteInscription <= :dateFin')
                 ->setParameter('dateFin', $searchData->dateFin);
         }
-
         if ($searchData->inscrit) {
-            $query->innerJoin('s.participants', 'par')
-                ->andWhere('par.id = :userId')
-                ->setParameter('userId', $user->getId());
+            $query
+                ->andWhere(':user MEMBER OF s.participants')
+                ->setParameter('user', $user);
         }
 
         if ($searchData->organisateur) {
@@ -92,11 +101,15 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($searchData->nInscrit) {
-            $query->leftJoin('s.participants', 'part')
-                ->andWhere('part.id IS NULL OR part.id != :userId')
-                ->setParameter('userId', $user->getId());
+            $query
+                ->andWhere(':user NOT MEMBER OF s.participants')
+                ->setParameter('user', $user);
         }
-        if (!$searchData->passees) { // Si la case n'est pas cochée, on exclut les sorties passées
+
+        if ($searchData->passees) { // Si la case est cochée, on inclut seulement les sorties passées
+            $query->andWhere('e.libelle = :libelle')
+                ->setParameter('libelle', 'passée');
+        } else { // Sinon, on exclut les sorties passées // a voir si utile
             $query->andWhere('e.libelle != :libelle')
                 ->setParameter('libelle', 'passée');
         }
@@ -104,6 +117,7 @@ class SortieRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
 
 
 }
