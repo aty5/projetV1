@@ -23,11 +23,7 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new Participant();
-       // $campus = new Campus();
-        //$campus->setNom('Angers');
         $user->setActif(true);
-       // $user->setAdministrateur(true);
-        //$user->setCampus($campus);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -41,7 +37,6 @@ class RegistrationController extends AbstractController
             );
 
             $entityManager->persist($user);
-          //  $entityManager->persist($campus);
             $entityManager->flush();
             // do anything else you need here, like send an email
 

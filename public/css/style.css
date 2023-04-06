@@ -33,7 +33,7 @@ main > h1 {
 }
 
 
-/*label{
+label{
     display: block;
     min-width: 200px;
     text-align: right;
@@ -43,7 +43,7 @@ main > h1 {
 input, textarea, select {
     width: 20%;
     min-width: 300px;
-}*/
+}
 
 .flex {
     display: flex;
@@ -66,4 +66,15 @@ button {
 .div_button {
     display: flex;
     justify-content: center;
+}
+
+
+.flash{
+    text-align: center;
+}
+.flash-success{
+    background: green;
+}
+.flash-error{
+    background: #a10606;
 }

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
@@ -25,6 +26,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
+     * @Assert\Email(message="L'adresse email n'est pas une adresse email valide.")
+     * @Assert\NotBlank(message="Merci de renseigner une adresse email.")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -32,26 +35,37 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
+     * @Assert\NotBlank(message="Merci de renseigner un mot de passe.")
+     * @Assert\Length(max={120})
      * @ORM\Column(type="string")
      */
     private $motPasse; //motPasse
 
     /**
+     * @Assert\NotBlank(message="Merci de renseigner un nom")
+     * @Assert\Length(max={120})
      * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
     /**
+     * @Assert\NotBlank(message="Merci de renseigner un prénom.")
+     * @Assert\Length(max={120})
      * @ORM\Column(type="string", length=255)
      */
     private $prenom;
 
     /**
+     * @Assert\Regex(pattern="[(0|\\+33|0033)[1-9][0-9]{8}]")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $telephone;
 
     /**
+     * @Assert\NotBlank(message="Merci de renseigner un pseudonyme.")
+     * @Assert\NotNull(message="Le pseudonyme ne peut pas être vide")
+     * @Assert\Length(min=4, minMessage="Votre pseudo doit comporter au moins 4 caractères")
+     * @Assert\Length(max={120})
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $pseudo;
@@ -64,7 +78,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Sortie::class, inversedBy="participants")
      */
-    private $sorties; //pluriel
+    private $sorties;
 
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur")
@@ -82,8 +96,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $administrateur;
 
-    //rajouter un attribut administrateur
-
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -100,7 +112,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -220,7 +232,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(string $pseudo = null): self
     {
         $this->pseudo = $pseudo;
 

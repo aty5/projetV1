@@ -22,16 +22,26 @@
             <div>
                 <nav>
                     <ul>
+                        {% if app.user %}
                         <li><a href="#">Accueil</a></li>
-                        <li><a href="#">Mon profil</a></li>
+                        <li><a href="{{ path('app_profil',{'id':app.user.id}) }}">Mon profil</a></li>
                         <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
 
         </header>
         <main>
-        {% block body %}{% endblock %}
+            {# read and display all flash messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% block body %}{% endblock %}
         </main>
         <footer>
 
