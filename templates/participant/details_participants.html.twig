@@ -7,47 +7,28 @@
 
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <label>Nom:</label>
-            </div>
-            <div class="col-md-9">
-                <div>{{ participant.nom }}</div>
-            </div>
+    <div>
+
+        <div> Nom:
+            {{ participant.nom }}
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <label>Prénom:</label>
-            </div>
-            <div class="col-md-9">
-                <div>{{ participant.prenom }}</div>
-            </div>
+
+        <div>
+        Prénom:{{ participant.prenom }}
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <label>Téléphone:</label>
-            </div>
-            <div class="col-md-9">
-                <div>{{ participant.telephone }}</div>
-            </div>
+
+        <div>
+        Téléphone:{{ participant.telephone }}
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <label>Email:</label>
-            </div>
-            <div class="col-md-9">
-                <div>{{ participant.email }}</div>
-            </div>
+
+        <div>
+            Email:{{ participant.email }}
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <label>Campus:</label>
-            </div>
-            <div class="col-md-9">
-                <div>{{ participant.campus.nom }}</div>
-            </div>
+
+        <div>
+            Campus: {{ participant.campus.nom }}
         </div>
+
     </div>
 {% endblock %}
 

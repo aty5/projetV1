@@ -109,16 +109,21 @@
                     <td>{{ sortie.dateLimiteInscription | date('d/m/y') }}</td>
                     <td>{{ sortie.participants|length }}  / {{ sortie.nbInscriptionsMax }}</td>
                     <td>{{ sortie.etat.libelle }}</td>
+
                     <td>
                         {% if sortie.participants.contains(app.user) %}
                             <span>&#10003;</span>
                         {% endif %}
                     </td>
+
                     <td><a href="{{ path('details_participant', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
+
                     <td>
+
                         {% if sortie.etat.libelle != 'Créée' %}
-                            <a href="{{ path('gestion_sortie_details', {'id': sortie.id}) }}" class="btn btn-sm btn-outline-primary">Afficher</a>
+                            <a href="{{ path('gestion_sortie_creer', {'id': sortie.id}) }}" class="btn btn-sm btn-outline-primary">Afficher</a>
                         {% endif %}
+
                         {% if sortie.getEtat().getLibelle() == 'Ouverte' %}
                             {% if sortie.participants.contains(app.user) %}
                                 <a href="{{ path('gestion_sortie_desinscription', {'id': sortie.id} | merge(app.request.query)) }}" class="btn btn-sm btn-outline-danger">Se désinscrire</a>
@@ -126,17 +131,19 @@
                                 <a href="{{ path('gestion_sortie_inscription', {'id': sortie.id} | merge(app.request.query)) }}" class="btn btn-sm btn-outline-success">S'inscrire</a>
                             {% endif %}
                         {% endif %}
+
                         {% if sortie.getEtat().getLibelle() == 'Créée' %}
                             <a href="" class="btn btn-sm btn-outline-warning">Modifier</a>
                             <a href="" class="btn btn-sm btn-outline-success">Publier</a>
                         {% endif %}
                     </td>
+
                 </tr>
                 </tbody>
             {% endfor %}
         </table>
 
-        <a href="" class="btn btn-lg btn-outline-warning">Créer une sortie</a>
+        <a href="{{ path('gestion_sortie_creer', {'id': -1}) }}" class="btn btn-lg btn-outline-warning">Créer une sortie</a>
 
     </main>
 {% endblock %}

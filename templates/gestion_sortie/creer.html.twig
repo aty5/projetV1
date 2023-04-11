@@ -3,29 +3,65 @@
 {% block title %}Créer Sortie{% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
-    <div class="form_creer_sortie">
+    {{ parent() }}
+
+    {% if(id > 0) %}
+    <div class="flex" style="justify-content: space-around;">
+        <h1>Détail de la sortie : {{ nom_de_sortie }}</h1>>
         <div>
+            <h2 style="font-style: italic;">Etat : {{ etat }}</h2>
+        </div>
+    </div>
+    {% else %}
+        <h1>Créer une sortie</h1>>
+    {% endif %}
+
+    {{ form_start(sortieForm) }}
+
+    <div class="form_creer_sortie">
+
+        <div>
+            <div class="erreur">
+                {{ form_errors(sortieForm.nom) }}
+            </div>
             <div class="flex">
                 {{ form_label(sortieForm.nom, 'Nom de la sortie :') }}
                 {{ form_widget(sortieForm.nom) }}
+            </div>
+
+
+            <div class="erreur">
+                {{ form_errors(sortieForm.dateHeureDebut) }}
             </div>
             <div class="flex">
                 {{ form_label(sortieForm.dateHeureDebut, 'Date et heure de la sortie :') }}
                 {{ form_widget(sortieForm.dateHeureDebut) }}
             </div>
+
+            <div class="erreur">
+                {{ form_errors(sortieForm.dateLimiteInscription) }}
+            </div>
             <div class="flex">
                 {{ form_label(sortieForm.dateLimiteInscription, 'Date limite d\'inscription :') }}
                 {{ form_widget(sortieForm.dateLimiteInscription) }}
+            </div>
+
+            <div class="erreur">
+                {{ form_errors(sortieForm.nbInscriptionsMax) }}
             </div>
             <div class="flex">
                 {{ form_label(sortieForm.nbInscriptionsMax, 'Nombre de place :') }}
                 {{ form_widget(sortieForm.nbInscriptionsMax) }}
             </div>
+
+            <div class="erreur">
+                {{ form_errors(sortieForm.duree) }}
+            </div>
             <div class="flex">
                 {{ form_label(sortieForm.duree, 'Durée :') }}
                 {{ form_widget(sortieForm.duree) }}
             </div>
+
             <div class="flex">
                 {{ form_label(sortieForm.infosSortie, 'Description et infos :') }}
                 {{ form_widget(sortieForm.infosSortie) }}
@@ -34,40 +70,83 @@
 
         <div>
             <div class="flex">
-                {{ form_label(sortieForm.siteOrganisateur, 'Campus :') }}
-                {{ form_widget(sortieForm.siteOrganisateur) }}
+                <label for="campus">Campus :</label>
+                <input type="text" name="campus" id="campus" value="{{ campus }}">
             </div>
+
             <div class="flex">
-                {{ form_label(lieuForm.ville, 'Ville :') }}
-                {{ form_widget(lieuForm.ville) }}
+                <label for="villes">Ville :</label>
+                <select name="villes" id="villes">
+                    {% if(id == -1) %}
+                    <option value="" disabled selected>Veuillez choisir une ville</option>
+                    {% endif %}
+
+                    {% for ville in villes %}
+                        {% if(ville == villeSelectionnee) %}
+                            <option value="{{ ville.nom }}" selected>{{ ville.nom }}</option>
+                        {% else %}
+                            <option value="{{ ville.nom }}">{{ ville.nom }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
-            <div class="flex">
-                {{ form_label(lieuForm.nom, 'Lieu :') }}
-                {{ form_widget(lieuForm.nom) }}
-            </div>
-            <div class="flex">
-                {{ form_label(lieuForm.rue, 'Rue :') }}
-                {{ form_widget(lieuForm.rue) }}
-            </div>
-            <div>
-                <div style="text-align: center">
-                    TODO: formulaire code postal
+
+            {% if(id > 0) %}
+                <div class="flex">
+                    {{ form_label(sortieForm.lieu, 'Lieu :') }}
+                    {{ form_widget(sortieForm.lieu) }}
                 </div>
-            </div>
+            {% else %}
+                <div class="flex">
+                    <label for="lieux">Lieu :</label>
+                    <select name="lieux" id="lieux"></select>
+                </div>
+            {% endif %}
+
             <div class="flex">
-                {{ form_label(lieuForm.latitude, 'Latitude :') }}
-                {{ form_widget(lieuForm.latitude) }}
+                <label for="rue">Rue :</label>
+                <input type = "text" id = "rue" name = "rue" value="{{ id>0? rue :'' }}"/>
             </div>
+
             <div class="flex">
-                {{ form_label(lieuForm.longitude, 'Longitude :') }}
-                {{ form_widget(lieuForm.longitude) }}
+                <label for="cp">Code Postal :</label>
+                <input type = "text" id = "cp" name = "cp" value="{{ id>0? code_postal :'' }}"/>
             </div>
+
+            <div class="flex">
+                <label for="latitude">Latitude :</label>
+                <input type = "text" id = "latitude" name = "latitude" value="{{ id>0? latitude :'' }}"/>
+            </div>
+
+            <div class="flex">
+                <label for="longitude">Longitude :</label>
+                <input type = "text" id = "longitude" name = "longitude" value="{{ id>0? longitude :'' }}"/>
+            </div>
+
         </div>
 
     </div>
-    <div class="div_button">
-        <button>Enregistrer</button>
-        <button>Publier la sortie</button>
-        <button>Annuler</button>
-    </div>
+
+    {% if(identifiantOrganisateur == identifiantUtilisateur or id == -1) %}
+        <div class="div_button">
+            <button class="button" id="enregistrer" name="enregistrer" value="enregistrer">Enregistrer</button>
+            <button class="button" id="publier" name="publier" value="publier">Publier la sortie</button>
+            {% if(etat == 'Ouverte' or etat == 'Clôturée' or etat == 'Créée') %}
+                <button class="button" id="annuler" name="annuler" value="annuler">Annuler</button>
+            {% else %}
+                <button class="button" id="annuler" name="annuler" value="annuler" disabled>Annuler</button>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {{ form_row(sortieForm._token) }}
+    {{ form_end(sortieForm, {render_rest: false}) }}
+
+{# {{ form_end(sortieForm, {render_rest: false}) }} #}
+
 {% endblock %}
+
+{% block javascripts %}
+     {{ parent() }}
+     <script src="{{ asset('js/sortir.js') }}" defer></script>
+ {% endblock %}

@@ -12,6 +12,7 @@ header{
     width: 250px;
     height: 50px;
     background-color: darkblue;
+    border-radius: 10px;
     font-size: 2em;
     font-weight: bold;
     color: white;
@@ -33,21 +34,22 @@ main > h1 {
 }
 
 
-/*label{
+label{
     display: block;
     min-width: 200px;
     text-align: right;
     margin-right: 10px;
 }
 
-input, textarea, select {
+input, select {
     width: 20%;
     min-width: 300px;
-}*/
+}
+
 
 .flex {
     display: flex;
-    margin: 10px;
+    margin: 0 20px 10px 10px;
 }
 
 .form_creer_sortie {
@@ -58,12 +60,66 @@ input, textarea, select {
     margin-right: auto;
 }
 
-button {
+.button {
+    min-width: 150px;
     margin: 20px;
-    padding: 20px;
+    padding: 10px 20px;
+    border: solid gray 2px;
+    background-color: #5eb5e0;
+}
+a[class="button"] {
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.button:hover{
+    color:white;
+    background-color: darkblue;
+    font-weight: bold;
 }
 
 .div_button {
     display: flex;
     justify-content: center;
+}
+
+.erreur, ul {
+    color: red;
+    text-align: center;
+    list-style: none;
+}
+
+
+.flash{
+    text-align: center;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 300px;
+    padding: 20px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.flash-succes{
+    background: green;
+}
+.flash-error{
+    background: #a10606;
+}
+
+.texte {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+textarea {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden {
+    color: transparent;
 }

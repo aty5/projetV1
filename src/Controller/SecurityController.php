@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Controller\api\ApiController;
+use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,15 +15,21 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils,
+                          EntityManagerInterface $entityManager,
+                          SortieRepository $sortieRepository,
+                          ApiController $apiController): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            /*$apiController->majEtat($entityManager, $sortieRepository, 'Ouverte', new \DateTime(), 'Clôturée');
+            $apiController->majEtat($entityManager, $sortieRepository, 'Clôturée', new \DateTime(), 'Activité en cours');
+            $apiController->majEtat($entityManager, $sortieRepository, 'Activité en cours', new \DateTime(), 'Passée');*/
+return $this->redirectToRoute('gestion_sortie_accueil');
+        }
 
-        // get the login error if there is one
+// get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
+// last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);

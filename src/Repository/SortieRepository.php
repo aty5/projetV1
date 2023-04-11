@@ -46,27 +46,18 @@ class SortieRepository extends ServiceEntityRepository
     public function listerSortiesFiltres(SearchData $searchData): array
     {
         $user = $this->security->getUser();
-        $query = $this->createQueryBuilder('s') //filtrer les sorties dont l'etat est historisées prendre les sorties différente de historisée
+
+        $query = $this->createQueryBuilder('s')
             ->addSelect('e')
             ->leftjoin('s.etat', 'e')
             ->addSelect('o')
             ->leftjoin('s.organisateur', 'o')
             ->addSelect('p')
-            ->leftJoin('s.participants', 'p');
+            ->leftJoin('s.participants', 'p')
 
-        if ($user) {
-            $query->andWhere(
-                $query->expr()->orX(
-                    'e.libelle != :etat_creee',
-                    's.organisateur = :user'
-                )
-            )->setParameter('user', $user)
-                ->setParameter('etat_creee', 'créée');
-        } else {
-            $query->andWhere('e.libelle != :etat_creee')
-                ->setParameter('etat_creee', 'créée');
-        }
-
+            ->andWhere('e.libelle != :etat_creee OR s.organisateur = :user')
+            ->setParameter('etat_creee', 'créée')
+            ->setParameter('user', $user);
 
         if(!empty($searchData->nom)){
             $query = $query
@@ -86,7 +77,7 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($searchData->dateFin) {
-            $query->andWhere('s.dateLimiteInscription <= :dateFin')
+            $query->andWhere('s.dateHeureDebut <= :dateFin')
                 ->setParameter('dateFin', $searchData->dateFin);
         }
         if ($searchData->inscrit) {
@@ -95,25 +86,32 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
 
-        if ($searchData->organisateur) {
-            $query->andWhere('o.id = :userId')
-                ->setParameter('userId', $user->getId());
-        }
-
         if ($searchData->nInscrit) {
             $query
                 ->andWhere(':user NOT MEMBER OF s.participants')
                 ->setParameter('user', $user);
         }
 
-        if ($searchData->passees) { // Si la case est cochée, on inclut seulement les sorties passées
-            $query->andWhere('e.libelle = :libelle')
-                ->setParameter('libelle', 'passée');
-        } else { // Sinon, on exclut les sorties passées // a voir si utile
-            $query->andWhere('e.libelle != :libelle')
-                ->setParameter('libelle', 'passée');
+        if ($searchData->organisateur) {
+            $query->andWhere('o.id = :userId')
+                ->setParameter('userId', $user->getId());
         }
 
+
+
+        // Si la case est cochée, on inclut seulement les sorties passées tout en excluant les sortiés passées depuis + d'un mois
+        if ($searchData->passees) {
+            $query->andWhere('s.dateHeureDebut < :now')
+                ->setParameter('now', new \DateTime())
+                ->andWhere('e.libelle = :libelle')
+                ->setParameter('libelle', 'passée')
+                ->andWhere('s.dateHeureDebut >= :moinsUnMois')
+                ->setParameter('moinsUnMois', (new \DateTime('-1 month')));
+        } else { // Sinon, on exclut toutes les sorties passées
+            $query
+                ->andWhere('e.libelle != :libelle')
+                ->setParameter('libelle', 'passée');
+        }
 
         return $query->getQuery()->getResult();
     }
